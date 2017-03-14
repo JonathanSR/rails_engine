@@ -72,7 +72,7 @@ describe "Merchants API" do
     merchant1 = create(:merchant)
     merchant2 = create(:merchant)
 
-    get "/api/v1/merchants/find_all?name=#{merchant1.id}"
+    get "/api/v1/merchants/find_all?id=#{merchant1.id}"
 
     returned_merchants = JSON.parse(response.body)
     first_merchant = returned_merchants.first
