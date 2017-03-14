@@ -68,7 +68,7 @@ describe "Merchants API" do
     expect(returned_merchant["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-  xit "returns all merchants with an id" do
+  it "returns all merchants with an id" do
     merchant1 = create(:merchant)
     merchant2 = create(:merchant)
 
@@ -97,7 +97,7 @@ describe "Merchants API" do
     expect(first_merchant["name"]).to eq(merchant1.name)
   end
 
-  xit "returns all merchants with same created_at" do
+  it "returns all merchants with same created_at" do
     create_list(:merchant, 3)
 
     get "/api/v1/merchants/find_all?created_at=#{Merchant.first.created_at}"
@@ -109,7 +109,7 @@ describe "Merchants API" do
     expect(returned_merchants.count).to eq(3)
   end
 
-  xit "returns all merchants with same updated_at" do
+  it "returns all merchants with same updated_at" do
     create_list(:merchant, 3)
 
     get "/api/v1/merchants/find_all?updated_at=#{Merchant.first.updated_at}"
@@ -125,10 +125,9 @@ describe "Merchants API" do
     create_list(:merchant, 3)
     get '/api/v1/merchants/random'
 
-    merchant = JSON.parse(response.body)
+    returned_merchant = JSON.parse(response.body)
 
     expect(response).to be_success
-    # expect(merchant.count).to eq(1) It doesn't pass, says 4
-    #should we verify that it's only returning one merchant?
+    expect(returned_merchant.class).to eq(Hash)
   end
 end

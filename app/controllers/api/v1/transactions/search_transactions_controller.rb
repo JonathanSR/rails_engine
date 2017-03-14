@@ -11,6 +11,6 @@ class Api::V1::Transactions::SearchTransactionsController < ApplicationControlle
   private
 
   def transaction_params
-    params.permit(:id, :customer_id, :merchant_id, :status, :created_at, :updated_at)
+    params.permit(:id, :invoice_id, :credit_card_number, :credit_card_expiration_date, :result, :created_at, :updated_at)
   end
 end

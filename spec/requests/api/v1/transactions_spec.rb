@@ -115,25 +115,22 @@ describe "Transactions API" do
     expect(first_transaction["id"]).to eq(transaction1.id)
   end
 
-  xit "returns all transactions with a invoice_id" do
-    invoice1 = create(:invoice)
-    invoice2 = create(:invoice)
-    invoice3 = create(:invoice)
-    transaction1 = create(:transaction, invoice_id: invoice1.id)
-    transaction2 = create(:transaction, invoice_id: invoice2.id)
-    transaction3 = create(:transaction, invoice_id: invoice3.id)
+  it "returns all transactions with a invoice_id" do
+      create_list(:transaction, 3)
+      invoice = create(:invoice)
+      create_list(:transaction, 3, invoice: invoice)
 
-    get "/api/v1/transactions/find_all?invoice_id=#{transaction1.invoice_id}"
+    get "/api/v1/transactions/find_all?invoice_id=#{invoice.id}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first
 
     expect(response).to be_success
-    expect(returned_transactions.count).to eq(1)
-    expect(first_transaction["invoice_id"]).to eq(transaction1.invoice_id)
+    expect(returned_transactions.count).to eq(3)
+    expect(first_transaction["invoice_id"]).to eq(invoice.id)
   end
 
-  xit "returns all transactions with a specific credit card number" do
+  it "returns all transactions with a specific credit card number" do
     transaction1 = create(:transaction, credit_card_number: 1)
     transaction2 = create(:transaction, credit_card_number: 1)
     transaction3 = create(:transaction, credit_card_number: 3)
@@ -148,9 +145,9 @@ describe "Transactions API" do
     expect(first_transaction["credit_card_number"]).to eq(transaction1.credit_card_number)
   end
 
-  xit "returns all transactions with a credit card expiration date" do
-    transaction1 = create(:transaction, credit_card_expiration_date: "2017-03-13")
-    transaction2 = create(:transaction, credit_card_expiration_date: "2017-03-13")
+  it "returns all transactions with a credit card expiration date" do
+    transaction1 = create(:transaction)
+    transaction2 = create(:transaction)
     transaction3 = create(:transaction, credit_card_expiration_date: "2017-03-14")
 
     get "/api/v1/transactions/find_all?credit_card_expiration_date=#{transaction1.credit_card_expiration_date}"
@@ -160,10 +157,10 @@ describe "Transactions API" do
 
     expect(response).to be_success
     expect(returned_transactions.count).to eq(2)
-    expect(first_transaction["credit_card_expiration_date"]).to eq(transaction1.credit_card_expiration_date)
+    expect(first_transaction["credit_card_expiration_date"]).to eq("2017-03-13")
   end
 
-  xit "returns all transactions with a result" do
+  it "returns all transactions with a result" do
     transaction1 = create(:transaction, result: "success")
     transaction2 = create(:transaction, result: "failed")
     transaction3 = create(:transaction, result: "failed")
@@ -175,22 +172,23 @@ describe "Transactions API" do
 
     expect(response).to be_success
     expect(returned_transactions.count).to eq(1)
-    expect(first_transaction["result"]).to eq(transaction1.result)
+    expect(first_transaction["result"]).to eq("success")
   end
 
-  xit "returns all transactions with same created_at" do
+  it "returns all transactions with same created_at" do
     create_list(:transaction, 3)
 
-    get "/api/v1/transactions/find_all?created_at=#{transaction.first.created_at}"
+    get "/api/v1/transactions/find_all?created_at=#{Transaction.first.created_at}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first
 
     expect(response).to be_success
     expect(returned_transactions.count).to eq(3)
+    expect(first_transaction["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-  xit "returns all transactions with same updated_at" do
+  it "returns all transactions with same updated_at" do
     create_list(:transaction, 3)
 
     get "/api/v1/transactions/find_all?updated_at=#{Transaction.first.updated_at}"
@@ -200,16 +198,16 @@ describe "Transactions API" do
 
     expect(response).to be_success
     expect(returned_transactions.count).to eq(3)
+    expect(first_transaction["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
   it "returns a random transaction record" do
     create_list(:transaction, 3)
     get '/api/v1/transactions/random'
 
-    transaction = JSON.parse(response.body)
+    returned_transaction = JSON.parse(response.body)
 
     expect(response).to be_success
-    # expect(transaction.count).to eq(1) It doesn't pass, says 4
-    #should we verify that it's only returning one transaction?
+    expect(returned_transaction.class).to eq(Hash)
   end
 end

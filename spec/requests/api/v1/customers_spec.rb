@@ -57,7 +57,6 @@ describe "Customers API" do
     expect(returned_merchant["last_name"]).to eq(customer.last_name)
   end
 
-
   it "returns a single customer by created_at" do
     customer = create(:customer)
 
@@ -109,10 +108,11 @@ describe "Customers API" do
     expect(first_merchant["name"]).to eq(merchant1.name)
   end
 
-  xit "returns all customers with same created_at" do
+  it "returns all customers with same created_at" do
     create_list(:customer, 3)
 
-    get "/api/v1/customers/find_all?created_at=#{Merchant.first.created_at}"
+    get "/api/v1/customers/find_all?created_at=2014-11-07T12:12:12.000Z"
+
 
     returned_merchants = JSON.parse(response.body)
     first_merchant = returned_merchants.first
@@ -121,10 +121,10 @@ describe "Customers API" do
     expect(returned_merchants.count).to eq(3)
   end
 
-  xit "returns all customers with same updated_at" do
+  it "returns all customers with same updated_at" do
     create_list(:customer, 3)
 
-    get "/api/v1/customers/find_all?updated_at=#{Merchant.first.updated_at}"
+    get "/api/v1/customers/find_all?updated_at=2014-11-07T12:12:12.000Z"
 
     returned_merchants = JSON.parse(response.body)
     first_merchant = returned_merchants.first
@@ -137,10 +137,9 @@ describe "Customers API" do
     create_list(:customer, 3)
     get '/api/v1/customers/random'
 
-    customer = JSON.parse(response.body)
+    returned_customer = JSON.parse(response.body)
 
     expect(response).to be_success
-    # expect(customer.count).to eq(1) It doesn't pass, says 4
-    #should we verify that it's only returning one customer?
+    expect(returned_customer.class).to eq(Hash)
   end
 end
