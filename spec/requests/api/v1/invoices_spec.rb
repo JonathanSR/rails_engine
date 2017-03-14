@@ -2,12 +2,7 @@ require 'rails_helper'
 
 describe "Invoices API" do
   it "returns all invoices" do
-   create(:customer)
-  create(:merchant)
-    create_list(:invoice, 3) #, merchant_id: merchant.id, customer_id: customer.id)
-    # let(:merchant_id) {merchant.id}
-    # let(:customer_id)
-
+    create_list(:invoice, 3) 
     get '/api/v1/invoices'
 
     
@@ -64,7 +59,6 @@ describe "Invoices API" do
   it "returns a single invoice by created_at" do
     invoice = create(:invoice)
 
-# byebug
     get "/api/v1/invoices/find?created_at=2014-11-07 12:12:12"
 
     returned_invoice = JSON.parse(response.body)
@@ -142,6 +136,8 @@ describe "Invoices API" do
 
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
+    expect(first_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    
   end
   
   it "returns all invoices with same updated_at" do
@@ -154,6 +150,8 @@ describe "Invoices API" do
 
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
+    expect(first_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    
   end
 
   it "returns a random invoice record" do
@@ -163,6 +161,7 @@ describe "Invoices API" do
     invoice = JSON.parse(response.body)
 
     expect(response).to be_success
+    expect(invoice.class).to eq(Hash)
   end
 end
 

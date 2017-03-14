@@ -6,9 +6,6 @@ class Api::V1::Invoices::SearchInvoicesController < ApplicationController
   end
 
   def show
-   # byebug
-
-
     render json: Invoice.find_by(invoice_params)
   end
 
