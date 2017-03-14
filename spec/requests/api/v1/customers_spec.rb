@@ -58,7 +58,7 @@ describe "Customers API" do
   end
 
 
-  xit "returns a single customer by created_at" do
+  it "returns a single customer by created_at" do
     customer = create(:customer)
 
     get "/api/v1/customers/find?#{customer.created_at}"
@@ -66,10 +66,10 @@ describe "Customers API" do
     returned_merchant =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_merchant["created_at"]).to eq(customer.created_at)
+    expect(returned_merchant["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-  xit "returns a single customer by updated_at" do
+  it "returns a single customer by updated_at" do
     customer = create(:customer)
 
     get "/api/v1/customers/find?#{customer.updated_at}"
@@ -77,7 +77,7 @@ describe "Customers API" do
     returned_merchant =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_merchant["updated_at"]).to eq(customer.updated_at)
+    expect(returned_merchant["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
   it "returns all customers with an id" do

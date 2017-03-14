@@ -46,7 +46,7 @@ describe "Merchants API" do
     expect(returned_merchant["name"]).to eq(merchant.name)
   end
 
-  xit "returns a single merchant by created_at" do
+  it "returns a single merchant by created_at" do
     merchant = create(:merchant)
 
     get "/api/v1/merchants/find?#{merchant.created_at}"
@@ -54,10 +54,10 @@ describe "Merchants API" do
     returned_merchant =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_merchant["created_at"]).to eq(merchant.created_at)
+    expect(returned_merchant["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-  xit "returns a single merchant by updated_at" do
+  it "returns a single merchant by updated_at" do
     merchant = create(:merchant)
 
     get "/api/v1/merchants/find?#{merchant.updated_at}"
@@ -65,7 +65,7 @@ describe "Merchants API" do
     returned_merchant =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_merchant["updated_at"]).to eq(merchant.updated_at)
+    expect(returned_merchant["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
   xit "returns all merchants with an id" do

@@ -57,7 +57,7 @@ describe "Transactions API" do
     expect(returned_transaction["credit_card_number"]).to eq(transaction.credit_card_number)
   end
 
-  xit "returns a single transaction by credit card expiration date" do
+  it "returns a single transaction by credit card expiration date" do
     transaction = create(:transaction)
 
     get "/api/v1/transactions/find?#{transaction.credit_card_expiration_date}"
@@ -65,7 +65,7 @@ describe "Transactions API" do
     returned_transaction =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_transaction["credit_card_expiration_date"]).to eq(transaction.credit_card_expiration_date)
+    expect(returned_transaction["credit_card_expiration_date"]).to eq("2017-03-13")
   end
 
   it "returns a single transaction by result" do
@@ -79,7 +79,7 @@ describe "Transactions API" do
     expect(returned_transaction["result"]).to eq(transaction.result)
   end
 
-  xit "returns a single transaction by created_at" do
+  it "returns a single transaction by created_at" do
     transaction = create(:transaction)
 
     get "/api/v1/transactions/find?#{transaction.created_at}"
@@ -87,10 +87,10 @@ describe "Transactions API" do
     returned_transaction =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_transaction["created_at"]).to eq(transaction.created_at)
+    expect(returned_transaction["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-  xit "returns a single transaction by updated_at" do
+  it "returns a single transaction by updated_at" do
     transaction = create(:transaction)
 
     get "/api/v1/transactions/find?#{transaction.updated_at}"
@@ -98,7 +98,7 @@ describe "Transactions API" do
     returned_transaction =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_transaction["updated_at"]).to eq(transaction.updated_at)
+    expect(returned_transaction["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
   it "returns all transactions with an id" do
@@ -115,7 +115,7 @@ describe "Transactions API" do
     expect(first_transaction["id"]).to eq(transaction1.id)
   end
 
-  it "returns all transactions with a invoice_id" do
+  xit "returns all transactions with a invoice_id" do
     invoice1 = create(:invoice)
     invoice2 = create(:invoice)
     invoice3 = create(:invoice)
@@ -123,7 +123,7 @@ describe "Transactions API" do
     transaction2 = create(:transaction, invoice_id: invoice2.id)
     transaction3 = create(:transaction, invoice_id: invoice3.id)
 
-    get "/api/v1/transactions/find_all?name=#{transaction1.invoice_id}"
+    get "/api/v1/transactions/find_all?invoice_id=#{transaction1.invoice_id}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first
@@ -138,7 +138,7 @@ describe "Transactions API" do
     transaction2 = create(:transaction, credit_card_number: 1)
     transaction3 = create(:transaction, credit_card_number: 3)
 
-    get "/api/v1/transactions/find_all?name=#{transaction1.credit_card_number}"
+    get "/api/v1/transactions/find_all?credit_card_number=#{transaction1.credit_card_number}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first
@@ -153,7 +153,7 @@ describe "Transactions API" do
     transaction2 = create(:transaction, credit_card_expiration_date: "2017-03-13")
     transaction3 = create(:transaction, credit_card_expiration_date: "2017-03-14")
 
-    get "/api/v1/transactions/find_all?name=#{transaction1.credit_card_expiration_date}"
+    get "/api/v1/transactions/find_all?credit_card_expiration_date=#{transaction1.credit_card_expiration_date}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first
@@ -168,7 +168,7 @@ describe "Transactions API" do
     transaction2 = create(:transaction, result: "failed")
     transaction3 = create(:transaction, result: "failed")
 
-    get "/api/v1/transactions/find_all?name=#{transaction1.result}"
+    get "/api/v1/transactions/find_all?result=#{transaction1.result}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first

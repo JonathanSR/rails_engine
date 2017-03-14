@@ -4,18 +4,15 @@ describe "Invoices API" do
   it "returns all invoices" do
     create(:customer)
     create(:merchant)
-    create_list(:invoice, 3) #, merchant_id: merchant.id, customer_id: customer.id)
-    # let(:merchant_id) {merchant.id}
-    # let(:customer_id)
+    create_list(:invoice, 3)
 
     get '/api/v1/invoices'
-
 
     invoices = JSON.parse(response.body)
 
     expect(response).to be_success
     expect(invoices.count).to eq(3)
-  end 
+  end
 
   it "can get a single invoice by its id" do
     id = create(:invoice).id
@@ -61,29 +58,29 @@ describe "Invoices API" do
     expect(returned_invoice["status"]).to eq(invoice.status)
   end
 
-  xit "returns a single invoice by created_at" do
+  it "returns a single invoice by created_at" do
     invoice = create(:invoice)
-#byebug
-    get "/api/v1/invoices/find?created_at=#{invoice.created_at}"
+
+    get "/api/v1/invoices/find?created_at=2014-11-07 12:12:12"
 
     returned_invoice = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_invoice["created_at"]).to eq(invoice.created_at)
+    expect(returned_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-  xit "returns a single invoice by updated_at" do
+  it "returns a single invoice by updated_at" do
     invoice = create(:invoice)
 
-    get "/api/v1/invoices/find?updated_at=#{invoice.updated_at}"
+    get "/api/v1/invoices/find?updated_at=2014-11-07T12:12:12.000Z"
 
     returned_invoice = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_invoice["created_at"]).to eq(invoice.updated_at)
+    expect(returned_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
-it "returns all invoices with same customer_id" do
+  it "returns all invoices with same customer_id" do
     create_list(:invoice, 3)
     customer = create(:customer)
     create_list(:invoice, 3, customer: customer)
@@ -99,7 +96,7 @@ it "returns all invoices with same customer_id" do
     expect(first_invoice["customer_id"]).to eq(customer.id)
   end
 
-it "returns all invoices with same merchant_id" do
+  it "returns all invoices with same merchant_id" do
     create_list(:invoice, 3)
     merchant = create(:merchant)
     create_list(:invoice, 3, merchant: merchant)
@@ -130,10 +127,10 @@ it "returns all invoices with same merchant_id" do
     expect(first_invoice["status"]).to eq("ordered")
   end
 
-  xit "returns all invoices with same created_at" do
+  it "returns all invoices with same created_at" do
     create_list(:invoice, 3)
 
-    get "/api/v1/invoices/find_all?created_at=#{Invoice.first.created_at}"
+    get "/api/v1/invoices/find_all?created_at=2014-11-07T12:12:12.000Z"
 
     returned_invoices = JSON.parse(response.body)
     first_invoice = returned_invoices.first
@@ -142,10 +139,10 @@ it "returns all invoices with same merchant_id" do
     expect(returned_invoices.count).to eq(3)
   end
 
-  xit "returns all invoices with same updated_at" do
+  it "returns all invoices with same updated_at" do
     create_list(:invoice, 3)
 
-    get "/api/v1/invoices/find_all?updated_at=#{Invoice.first.updated_at}"
+    get "/api/v1/invoices/find_all?updated_at=2014-11-07T12:12:12.000Z"
 
     returned_invoices = JSON.parse(response.body)
     first_invoice = returned_invoices.first
