@@ -2,15 +2,15 @@ require 'rails_helper'
 
 describe "Invoices API" do
   it "returns all invoices" do
-   create(:customer)
-  create(:merchant)
+    create(:customer)
+    create(:merchant)
     create_list(:invoice, 3) #, merchant_id: merchant.id, customer_id: customer.id)
     # let(:merchant_id) {merchant.id}
     # let(:customer_id)
 
     get '/api/v1/invoices'
 
-    
+
     invoices = JSON.parse(response.body)
 
     expect(response).to be_success
@@ -60,7 +60,7 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(returned_invoice["status"]).to eq(invoice.status)
   end
-    
+
   xit "returns a single invoice by created_at" do
     invoice = create(:invoice)
 #byebug
@@ -141,7 +141,7 @@ it "returns all invoices with same merchant_id" do
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
   end
-  
+
   xit "returns all invoices with same updated_at" do
     create_list(:invoice, 3)
 
@@ -163,4 +163,3 @@ it "returns all invoices with same merchant_id" do
     expect(response).to be_success
   end
 end
-
