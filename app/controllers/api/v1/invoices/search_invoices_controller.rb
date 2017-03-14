@@ -2,9 +2,13 @@ class Api::V1::Invoices::SearchInvoicesController < ApplicationController
 
   def index
     render json: Invoice.where(invoice_params)
+
   end
 
   def show
+   # byebug
+
+
     render json: Invoice.find_by(invoice_params)
   end
 
