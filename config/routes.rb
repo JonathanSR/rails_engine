@@ -9,7 +9,10 @@ Rails.application.routes.draw do
         get'/random', to: 'random_invoices#show'
       end
       resources :invoices, only: [:index, :show]
+      resources :merchants, only: [:index, :show]
+      resources :customers, only: [:index, :show]
+      resources :transactions, only: [:index, :show]
     end
   end
 
-end
+

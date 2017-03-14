@@ -3,6 +3,6 @@ FactoryGirl.define do
     customer 
     merchant 
     status "shipped"
-    #created_at "2016"
+
   end
 end
