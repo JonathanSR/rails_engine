@@ -46,6 +46,17 @@ describe "Merchants API" do
     expect(returned_merchant["name"]).to eq(merchant.name)
   end
 
+  it "returns a single merchant by name case insensitive" do
+    merchant = create(:merchant, name: "Safeway")
+
+    get "/api/v1/merchants/find?safeway"
+
+    returned_merchant =JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(returned_merchant["name"]).to eq(merchant.name)
+  end
+
   it "returns a single merchant by created_at" do
     merchant = create(:merchant)
 
@@ -82,9 +93,9 @@ describe "Merchants API" do
     expect(first_merchant["id"]).to eq(merchant1.id)
   end
 
-  xit "returns all merchants with a name" do
-    merchant1 = create(:merchant, name: "Shop")
-    merchant2 = create(:merchant, name: "Shopify")
+  it "returns all merchants with a name" do
+    merchant1 = create(:merchant, name: "Google")
+    merchant2 = create(:merchant, name: "Amazon")
     merchant3 = create(:merchant, name: "Craftsy")
 
     get "/api/v1/merchants/find_all?name=#{merchant1.name}"
@@ -93,8 +104,23 @@ describe "Merchants API" do
     first_merchant = returned_merchants.first
 
     expect(response).to be_success
-    expect(returned_merchants.count).to eq(2)
+    expect(returned_merchants.count).to eq(1)
     expect(first_merchant["name"]).to eq(merchant1.name)
+  end
+
+  it "returns all merchants with a name case insensitive" do
+    merchant1 = create(:merchant, name: "Google")
+    merchant2 = create(:merchant, name: "Amazon")
+    merchant3 = create(:merchant, name: "Craftsy")
+
+    get "/api/v1/merchants/find_all?name=AMAZON"
+
+    returned_merchants = JSON.parse(response.body)
+    first_merchant = returned_merchants.first
+
+    expect(response).to be_success
+    expect(returned_merchants.count).to eq(1)
+    expect(first_merchant["name"]).to eq("Amazon")
   end
 
   it "returns all merchants with same created_at" do

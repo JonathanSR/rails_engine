@@ -79,6 +79,17 @@ describe "Transactions API" do
     expect(returned_transaction["result"]).to eq(transaction.result)
   end
 
+  it "returns a single transaction by result case insensitive" do
+    transaction = create(:transaction, result: "failed")
+
+    get "/api/v1/transactions/find?FAILED"
+
+    returned_transaction =JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(returned_transaction["result"]).to eq(transaction.result)
+  end
+
   it "returns a single transaction by created_at" do
     transaction = create(:transaction)
 
@@ -115,7 +126,7 @@ describe "Transactions API" do
     expect(first_transaction["id"]).to eq(transaction1.id)
   end
 
-  it "returns all transactions with a invoice_id" do
+  it "returns all transactions with an invoice_id" do
       create_list(:transaction, 3)
       invoice = create(:invoice)
       create_list(:transaction, 3, invoice: invoice)
@@ -165,13 +176,28 @@ describe "Transactions API" do
     transaction2 = create(:transaction, result: "failed")
     transaction3 = create(:transaction, result: "failed")
 
-    get "/api/v1/transactions/find_all?result=#{transaction1.result}"
+    get "/api/v1/transactions/find_all?result=#{transaction2.result}"
 
     returned_transactions = JSON.parse(response.body)
     first_transaction = returned_transactions.first
 
     expect(response).to be_success
-    expect(returned_transactions.count).to eq(1)
+    expect(returned_transactions.count).to eq(2)
+    expect(first_transaction["result"]).to eq("failed")
+  end
+
+  it "returns all transactions with a result case insensitive" do
+    transaction1 = create(:transaction, result: "success")
+    transaction2 = create(:transaction, result: "success")
+    transaction3 = create(:transaction, result: "failed")
+
+    get "/api/v1/transactions/find_all?result=SUCCESS"
+
+    returned_transactions = JSON.parse(response.body)
+    first_transaction = returned_transactions.first
+
+    expect(response).to be_success
+    expect(returned_transactions.count).to eq(2)
     expect(first_transaction["result"]).to eq("success")
   end
 
