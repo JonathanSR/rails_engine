@@ -7,11 +7,11 @@ Rails.application.routes.draw do
         get '/find', to: 'search_invoices#show'
         get'/find_all', to: 'search_invoices#index'
         get'/random', to: 'random_invoices#show'
-        # get '/:id/transactions', to: 'invoices_transactions#index'
-        # get '/:id/invoice_items', to: 'invoices_invoice_items#index'
-        # get '/:id/items', to: 'invoices_items#index'
-        # get '/:id/customer', to: 'invoices_customers#index'
-        # get '/:id/merchant', to: 'invoices_merchants#index'
+        get '/:id/transactions', to: 'invoices_transactions#index'
+        get'/:id/invoice_items', to: 'invoices_invoice_items#index'
+        get '/:id/items', to: 'invoices_items#index'
+        get'/:id/customer', to: 'invoices_customer#show'
+        get '/:id/merchant', to: 'invoices_merchant#show'
       end
       resources :invoices, only: [:index, :show]
 
