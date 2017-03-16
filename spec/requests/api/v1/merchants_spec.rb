@@ -156,4 +156,28 @@ describe "Merchants API" do
     expect(response).to be_success
     expect(returned_merchant.class).to eq(Hash)
   end
+
+  it "returns all items associated with a specific merchant" do
+    merchant = create(:merchant)
+    create_list(:item, 3, merchant_id: merchant.id)
+
+    get "/api/v1/merchants/#{merchant.id}/items"
+
+    items = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(items.first["merchant_id"]).to eq(merchant.id)
+    expect(merchant.items.count).to eq(3)
+  end
+
+  it "returns all invoices associated with a specific merchant" do
+    merchant = create(:merchant)
+    create_list(:invoice, 3, merchant_id: merchant.id)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+
+    invoices = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(invoices.first["merchant_id"]).to eq(merchant.id)
+    expect(merchant.invoices.count).to eq(3)
+  end
 end
