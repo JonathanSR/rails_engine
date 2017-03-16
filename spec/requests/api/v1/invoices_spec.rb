@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Invoices API" do
   it "returns all invoices" do
-    create_list(:invoice, 3) 
+    create_list(:invoice, 3)
 
     get '/api/v1/invoices'
 
@@ -136,7 +136,7 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
     expect(first_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
-    
+
   end
 
   it "returns all invoices with same updated_at" do
@@ -150,7 +150,7 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
     expect(first_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
-    
+
   end
 
   it "returns a random invoice record" do
@@ -165,14 +165,12 @@ describe "Invoices API" do
 
   it "returns all transactions associated with a specific invoice" do
     create_list(:invoice_with_transactions, 3)
-    #byebug
 
     get "/api/v1/invoices/#{Invoice.first.id}/transactions"
 
     invoice = JSON.parse(response.body)
-#byebug
     expect(response).to be_success
-   expect(invoice.first["invoice_id"]).to eq(Invoice.first.id)
+    expect(invoice.first["invoice_id"]).to eq(Invoice.first.id)
     expect(Invoice.first.transactions.count).to eq(3)
   end
 
@@ -181,10 +179,10 @@ describe "Invoices API" do
 
     get "/api/v1/invoices/#{Invoice.first.id}/invoice_items"
 
-    invoice = JSON.parse(response.body)
+    transactions = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(invoice.first["invoice_id"]).to eq(Invoice.first.id)
+    expect(transactions.first["invoice_id"]).to eq(Invoice.first.id)
     expect(Invoice.first.invoice_items.count).to eq(3)
   end
 
@@ -194,7 +192,6 @@ describe "Invoices API" do
     get "/api/v1/invoices/#{Invoice.first.id}/items"
 
     invoice = JSON.parse(response.body)
-#byebug
     expect(response).to be_success
    #expect(invoice.first["id"]).to eq(Invoice.first.invoice_items.first.item_id) #["invoice_id"]).to eq(Invoice.first.id)
     expect(invoice.count).to eq(3)
@@ -212,7 +209,7 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(invoice["id"]).to eq(Invoice.last.customer.id)
   end
-  
+
   it "returns the associated merchant" do
     create_list(:invoice, 3)
     merchant = create(:merchant)
@@ -224,5 +221,29 @@ describe "Invoices API" do
 
     expect(response).to be_success
     expect(invoice["id"]).to eq(Invoice.last.merchant.id)
+  end
+
+  it "returns all invoice items associated with a specific item" do
+    item = create(:item)
+    create_list(:invoice_item, 3, item_id: item.id)
+
+    get "/api/v1/items/#{item.id}/invoice_items"
+
+    invoice_items= JSON.parse(response.body)
+    expect(response).to be_success
+    expect(invoice_items.first["item_id"]).to eq(item.id)
+    expect(invoice_items.count).to eq(3)
+  end
+
+  it "returns associated merchand of a specific item" do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    returned_merchant= JSON.parse(response.body)
+    expect(response).to be_success
+    expect(returned_merchant["id"]).to eq(merchant.id)
+    expect(returned_merchant.class).to eq(Hash)
   end
 end

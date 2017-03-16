@@ -236,4 +236,16 @@ describe "Transactions API" do
     expect(response).to be_success
     expect(returned_transaction.class).to eq(Hash)
   end
+
+  it "returns associated invoice of a specific transaction" do
+    invoice = create(:invoice)
+    transaction = create(:transaction, invoice_id: invoice.id)
+
+    get "/api/v1/transactions/#{transaction.id}/invoice"
+
+    returned_invoice = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(returned_invoice["id"]).to eq(invoice.id)
+    expect(returned_invoice.class).to eq(Hash)
+  end
 end

@@ -76,7 +76,7 @@ describe "Invoice Items API" do
 
     expect(response).to be_success
     expect(returned_invoice_item["created_at"]).to eq("2014-11-07T12:12:12.000Z")
-  end  
+  end
 
   it "returns a single invoice item by updated at" do
     invoice_item = create(:invoice_item)
@@ -92,7 +92,7 @@ describe "Invoice Items API" do
   it "returns all Invoice Items with same Id" do
     invoice_item_one = create(:invoice_item)
     invoice_item_one = create(:invoice_item)
-    
+
     get "/api/v1/invoice_items/find_all?id=#{invoice_item_one.id}"
 
     invoice_items = JSON.parse(response.body)
@@ -199,6 +199,29 @@ describe "Invoice Items API" do
 
     expect(response).to be_success
     expect(items.class).to eq(Hash)
+  end
 
+  it "returns associated invoice for a specific invoice item" do
+    invoice = create(:invoice)
+    invoice_item = create(:invoice_item, invoice_id: invoice.id)
+
+    get "/api/v1/invoice_items/#{invoice_item.id}/invoice"
+
+    returned_invoice = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(returned_invoice["id"]).to eq(invoice.id)
+    expect(returned_invoice.class).to eq(Hash)
+  end
+
+  it "returns associated item for a specific invoice item" do
+    item = create(:item)
+    invoice_item = create(:invoice_item, item_id: item.id)
+
+    get "/api/v1/invoice_items/#{invoice_item.id}/item"
+
+    returned_item = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(returned_item["id"]).to eq(item.id)
+    expect(returned_item.class).to eq(Hash)
   end
 end
