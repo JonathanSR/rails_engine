@@ -157,7 +157,6 @@ describe "Merchants API" do
     expect(returned_merchant.class).to eq(Hash)
   end
 
-<<<<<<< HEAD
   # it "returns customers_with_pending_invoices" do
   #   create(:merchant)
   #   create(:)
