@@ -8,7 +8,7 @@ class Merchant < ApplicationRecord
 
   def self.customers_with_pending_invoices
     joins(:invoices, :customer).where(invoice:{status:"pending"})
-  end 
+  end
 
   def favorite_customer
     customers.joins(invoices: [:transactions])
@@ -36,6 +36,11 @@ class Merchant < ApplicationRecord
     .limit(quantity)
   end
 
+  # def self.revenue_per_date(quantity)
+  #   joins(invoices: [:invoice_items, :transactions])
+  #   .merge(Transaction.success)
+  # end
+
 
   # def total_revenue(quantity)
   #   Merchant.joins(:transactions, :invoice_items)
@@ -44,6 +49,5 @@ class Merchant < ApplicationRecord
   #   .order("sum(quantity * unit_price)")
   #   .limit(quantity)
   # end
-  
+
 end
-  
