@@ -207,4 +207,30 @@ describe "Customers API" do
     expect(response).to be_success
     expect(returned_customer.class).to eq(Hash)
   end
+
+  it "returns a collection of associated invoices with a specific customer" do
+    customer = create(:customer)
+    create_list(:invoice, 3, customer_id: customer.id)
+
+    get "/api/v1/customers/#{customer.id}/invoices"
+
+    returned_invoices = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(returned_invoices.first["customer_id"]).to eq(customer.id)
+    expect(returned_invoices.count).to eq(3)
+  end
+
+  it "returns a collection of associated transactions with a specific customer" do
+    customer = create(:customer)
+    invoice = create(:invoice, customer_id: customer.id)
+    create_list(:transaction, 3, invoice_id: invoice.id)
+
+    get "/api/v1/customers/#{customer.id}/transactions"
+
+    returned_transactions = JSON.parse(response.body)
+    expect(response).to be_success
+    expect(returned_transactions.first["invoice_id"]).to eq(invoice.id)
+    expect(returned_transactions.count).to eq(3)
+  end
+
 end
