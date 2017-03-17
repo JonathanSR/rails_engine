@@ -46,7 +46,6 @@ class Merchant < ApplicationRecord
     else
       invoices
     end
-  end
 end
 
 
