@@ -8,7 +8,4 @@ class Api::V1::Merchants::MerchantsTotalRevenueController < ApplicationControlle
   def show  
   render json:  Merchant.find(params[:id]), :serializer => MerchantRevenueSerializer, date: params[:date]
   end
-
 end
-
-GET /api/v1/merchants/:id/revenue?date=x
