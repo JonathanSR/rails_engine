@@ -190,16 +190,14 @@ it "returns merchants favorite customer" do
     create(:transaction, result: 'success', invoice: invoice_one)
     create(:transaction, result: 'success', invoice: invoice_two)
     create(:transaction, result: 'success', invoice: invoice_three)
-    
 
     get "/api/v1/merchants/#{merchant.id}/favorite_customer"
 
     favorite_customer = JSON.parse(response.body)
 
-
     expect(response).to be_success
     expect(favorite_customer["id"]).to eq(customer_one.id)
-  end  
+  end
 
   it "returns the top merchant by revenue" do
     merchant_one = create(:merchant)
@@ -211,7 +209,7 @@ it "returns merchants favorite customer" do
     Invoice.all.each do |invoice|
       create(:invoice_item, quantity:1, unit_price: 10, invoice: invoice)
     end
-    
+
     InvoiceItem.all.each do |invoice_item|
       create(:transaction, result: "success", invoice: invoice_item.invoice)
     end
@@ -255,5 +253,24 @@ it "returns merchants favorite customer" do
     revenue = JSON.parse(response.body)
 
     expect(response).to be_success
+  end
+
+  it "returns revenue of all merchants on a date" do
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+    invoice1 = create(:invoice, merchant_id: merchant1.id, created_at: "2014-11-07")
+    invoice2 = create(:invoice, merchant_id: merchant2.id, created_at: "2014-11-07")
+    invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, quantity: 2, unit_price: 5000)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, quantity: 1, unit_price: 5000)
+    transaction1 = create(:transaction, result: 'success', invoice_id: invoice1.id)
+    transaction2 = create(:transaction, result: 'success', invoice_id: invoice2.id)
+
+    get "/api/v1/merchants/revenue?date=2014-11-07"
+
+    returned_result = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(returned_result).to have_key('total_revenue')
+    expect(returned_result['total_revenue']).to eq("150.0")
   end
 end
