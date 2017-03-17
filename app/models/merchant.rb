@@ -6,6 +6,10 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :invoice_items, through: :invoices
 
+  def self.customers_with_pending_invoices
+    joins(:invoices, :customer).where(invoice:{status:"pending"})
+  end
+
   def favorite_customer
     customers.joins(invoices: [:transactions])
     .merge(Transaction.success)
@@ -31,26 +35,19 @@ class Merchant < ApplicationRecord
     .order('total DESC')
     .limit(quantity)
   end
-  
-  def  self.total_revenue_by_date(date)
+
+  def self.total_revenue(date)
     joins(invoices: [:invoice_items, :transactions])
     .merge(Transaction.success)
-    .where(transactions:{created_at:(date)})
-    .sum("quantity * unit_price")
+    .where(invoices:{created_at:(date)})
+    .sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
-  def revenue(date)
-    invoices_by_date(date).joins(:transactions, :invoice_items)
-    .merge(Transaction.success)
-    .sum("invoice_items.unit_price * invoice_items.quantity")
-  end
-
-
-  def invoices_by_date(date)
-    if date
-      invoices.where(created_at: Time.zone.parse(date))
-    else
-      invoices
-    end
-  end
+  # def total_revenue(quantity)
+  #   Merchant.joins(:transactions, :invoice_items)
+  #   .where(transactions: {result:"success"})
+  #   .group(:id)
+  #   .order("sum(quantity * unit_price)")
+  #   .limit(quantity)
+  # end
 end
