@@ -39,8 +39,8 @@ class Merchant < ApplicationRecord
   def self.total_revenue(date)
     joins(invoices: [:invoice_items, :transactions])
     .merge(Transaction.success)
-    .where(transactions:{created_at:(date)})
-    .sum("quantity * unit_price")
+    .where(invoices:{created_at:(date)})
+    .sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
   # def total_revenue(quantity)
