@@ -3,6 +3,7 @@ class MerchantRevenueSerializer < ActiveModel::Serializer
 
   def revenue
     to_dollars(object.revenue(@instance_options[:date]))
+
   end
 
   def to_dollars(revenue)

@@ -85,7 +85,7 @@ describe "Customers API" do
     get "/api/v1/customers/find?2014-11-07 12:12:12"
 
     returned_customer =JSON.parse(response.body)
-    # byebug
+   
 
     expect(response).to be_success
     expect(returned_customer["id"]).to eq(123)

@@ -16,8 +16,7 @@
 # Ignore Byebug command history file.
 .byebug_history
 
-# Ignore csv files
-db/csv/*.csv
+
 
 # Ignore simplecov
 coverage
