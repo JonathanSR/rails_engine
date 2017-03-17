@@ -6,10 +6,8 @@ describe "Transactions API" do
 
     get '/api/v1/transactions'
 
-    expect(response).to be_success
-
     transactions = JSON.parse(response.body)
-
+    expect(response).to be_success
     expect(transactions.count).to eq(5)
   end
 
@@ -93,12 +91,12 @@ describe "Transactions API" do
   it "returns a single transaction by created_at" do
     transaction = create(:transaction)
 
-    get "/api/v1/transactions/find?#{transaction.created_at}"
+    get "/api/v1/transactions/find?created_at=#{transaction.created_at}"
 
     returned_transaction =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_transaction["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_transaction["created_at"]).to eq(transaction.created_at)
   end
 
   it "returns a single transaction by updated_at" do
