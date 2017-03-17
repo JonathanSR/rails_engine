@@ -225,31 +225,31 @@ it "returns merchants favorite customer" do
   it "returns total revenue for merchant" do
     merchant = create(:merchant)
     invoice_one = create(:invoice, merchant: merchant)
-    invoice_two = create(:invoice, merchant: merchant)    
+    invoice_two = create(:invoice, merchant: merchant)
      Invoice.all.each do |invoice|
         create_list(:transaction, 3, invoice: invoice, result: 'success')
         create_list(:invoice_item, 2, invoice: invoice)
     end
 
     get "/api/v1/merchants/#{merchant.id}/revenue"
-   
+
     revenue = JSON.parse(response.body)
 
     expect(response).to be_success
-    
+
   end
 
   it "returns total revenue for merchant" do
     merchant = create(:merchant)
     invoice_one = create(:invoice, merchant: merchant, created_at: "2014-11-07T12:12:12.000Z")
-    invoice_two = create(:invoice, merchant: merchant)    
+    invoice_two = create(:invoice, merchant: merchant)
      Invoice.all.each do |invoice|
         create_list(:transaction, 3, invoice: invoice, result: 'success')
         create_list(:invoice_item, 2, invoice: invoice)
     end
 
     get "/api/v1/merchants/#{merchant.id}/revenue?date=2104-11-07 12:12:00"
-   
+
     revenue = JSON.parse(response.body)
 
     expect(response).to be_success
