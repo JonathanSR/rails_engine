@@ -80,25 +80,26 @@ describe "Customers API" do
   end
 
   it "returns a single customer by created_at" do
-    customer = create(:customer)
+    customer = create(:customer, id: "123", created_at:"2014-11-07 12:12:12")
 
-    get "/api/v1/customers/find?#{customer.created_at}"
+    get "/api/v1/customers/find?2014-11-07 12:12:12"
 
     returned_customer =JSON.parse(response.body)
+    # byebug
 
     expect(response).to be_success
-    expect(returned_customer["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_customer["id"]).to eq(123)
   end
 
   it "returns a single customer by updated_at" do
-    customer = create(:customer)
+    customer = create(:customer, id: "124", created_at:"2014-11-07 12:12:12")
 
-    get "/api/v1/customers/find?#{customer.updated_at}"
+    get "/api/v1/customers/find?2014-11-07 12:12:12"
 
     returned_customer =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_customer["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_customer["id"]).to eq(124)
   end
 
   it "returns all customers with an id" do

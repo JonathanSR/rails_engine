@@ -57,25 +57,25 @@ describe "Invoices API" do
   end
 
   it "returns a single invoice by created_at" do
-    invoice = create(:invoice)
+    invoice = create(:invoice, id: 732, created_at: "2014-11-07 12:12:12")
 
     get "/api/v1/invoices/find?created_at=2014-11-07 12:12:12"
 
     returned_invoice = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_invoice["id"]).to eq(732)
   end
 
   it "returns a single invoice by updated_at" do
-    invoice = create(:invoice)
+    invoice = create(:invoice, id: 734, created_at: "2014-11-07 12:12:12")
 
-    get "/api/v1/invoices/find?updated_at=2014-11-07T12:12:12.000Z"
+    get "/api/v1/invoices/find?updated_at=2014-11-07 12:12:12"
 
     returned_invoice = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_invoice["id"]).to eq(734)
   end
 
   it "returns all invoices with same customer_id" do
@@ -126,31 +126,33 @@ describe "Invoices API" do
   end
 
   it "returns all invoices with same created_at" do
-    create_list(:invoice, 3)
+    invoice1 = create(:invoice, id: 860, created_at: "2014-11-07 12:12:12")
+    invoice2 = create(:invoice, id: 861, created_at: "2014-11-07 12:12:12")
+    invoice3 = create(:invoice, id: 862, created_at: "2014-11-07 12:12:12")
 
-    get "/api/v1/invoices/find_all?created_at=2014-11-07T12:12:12.000Z"
+    get "/api/v1/invoices/find_all?created_at=2014-11-07 12:12:12"
 
     returned_invoices = JSON.parse(response.body)
     first_invoice = returned_invoices.first
 
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
-    expect(first_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
-
+    expect(first_invoice["id"]).to eq(860)
   end
 
   it "returns all invoices with same updated_at" do
-    create_list(:invoice, 3)
+    invoice1 = create(:invoice, id: 850, created_at: "2014-11-07 12:12:12")
+    invoice2 = create(:invoice, id: 851, created_at: "2014-11-07 12:12:12")
+    invoice3 = create(:invoice, id: 852, created_at: "2014-11-07 12:12:12")
 
-    get "/api/v1/invoices/find_all?updated_at=2014-11-07T12:12:12.000Z"
+    get "/api/v1/invoices/find_all?updated_at=2014-11-07 12:12:12"
 
     returned_invoices = JSON.parse(response.body)
     first_invoice = returned_invoices.first
 
     expect(response).to be_success
     expect(returned_invoices.count).to eq(3)
-    expect(first_invoice["created_at"]).to eq("2014-11-07T12:12:12.000Z")
-
+    expect(first_invoice["id"]).to eq(850)
   end
 
   it "returns a random invoice record" do
@@ -193,7 +195,6 @@ describe "Invoices API" do
 
     invoice = JSON.parse(response.body)
     expect(response).to be_success
-   #expect(invoice.first["id"]).to eq(Invoice.first.invoice_items.first.item_id) #["invoice_id"]).to eq(Invoice.first.id)
     expect(invoice.count).to eq(3)
   end
 
