@@ -152,9 +152,9 @@ describe "Invoice Items API" do
 
    it "returns all invoice items with same unit price" do
     create_list(:invoice_item, 3)
-    create_list(:invoice_item, 3, unit_price: 123)
+    create_list(:invoice_item, 3, unit_price: 1234)
 
-    get "/api/v1/invoice_items/find_all?unit_price=123"
+    get "/api/v1/invoice_items/find_all?unit_price=1234"
 
     returned_invoice_items = JSON.parse(response.body)
     first_invoice_item = returned_invoice_items.first
@@ -162,7 +162,7 @@ describe "Invoice Items API" do
 
     expect(response).to be_success
     expect(returned_invoice_items.count).to eq(3)
-    expect(first_invoice_item["unit_price"]).to eq(123)
+    expect(first_invoice_item["unit_price"]).to eq("12.34")
   end
 
    it "returns all invoice items with same created_at" do
