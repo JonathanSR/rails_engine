@@ -7,5 +7,3 @@ class Api::V1::Merchants::MerchantsTotalRevenueController < ApplicationControlle
   render json:  Merchant.find(params[:id]), :serializer => MerchantRevenueSerializer, date: params[:date]
   end
 end
-
-# GET /api/v1/merchants/:id/revenue?date=x

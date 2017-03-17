@@ -194,6 +194,7 @@ it "returns merchants favorite customer" do
     get "/api/v1/merchants/#{merchant.id}/favorite_customer"
 
     favorite_customer = JSON.parse(response.body)
+
     expect(response).to be_success
     expect(favorite_customer["id"]).to eq(customer_one.id)
   end
