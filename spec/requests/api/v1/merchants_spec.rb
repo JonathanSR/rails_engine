@@ -233,4 +233,23 @@ describe "Merchants API" do
     expect(invoices.first["merchant_id"]).to eq(merchant.id)
     expect(merchant.invoices.count).to eq(3)
   end
+
+  it "returns revenue of all merchants on a date" do
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+    invoice1 = create(:invoice, merchant_id: merchant1.id)
+    invoice2 = create(:invoice, merchant_id: merchant2.id)
+    invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, quantity: 2, unit_price: 50)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, quantity: 1, unit_price: 50)
+    transaction1 = create(:transaction, result: 'success', invoice_id: invoice1.id, created_at: "2014-11-07")
+    transaction2 = create(:transaction, result: 'success', invoice_id: invoice2.id, created_at: "2014-11-07")
+
+    get "/api/v1/merchants/revenue=2014-11-07"
+
+    returned_result = JSON.parse(response.body)
+    byebug
+    expect(response).to be_success
+    expect(returned_result).to have_key('total_revenue')
+    expect(returned_result['total_revenue']).to eq(150)
+  end
 end
