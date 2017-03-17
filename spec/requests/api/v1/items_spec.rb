@@ -64,7 +64,7 @@ it "returns a single item by name" do
     returned_item = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_item["unit_price"]).to eq(item.unit_price)
+    expect(returned_item["unit_price"]).to eq("100.00")
   end
 
   it "returns a single item by merchant_id" do
@@ -143,17 +143,17 @@ it "returns a single item by name" do
 
   it "returns all items with same unit price" do
     create_list(:item, 3)
-    create_list(:item, 3, unit_price: 123)
+    create_list(:item, 3, unit_price: 1234)
 
-    get "/api/v1/items/find_all?unit_price=123"
+    get "/api/v1/items/find_all?unit_price=1234"
 
     returned_items = JSON.parse(response.body)
     first_item = returned_items.first
 
-
+#byebug
     expect(response).to be_success
     expect(returned_items.count).to eq(3)
-    expect(first_item["unit_price"]).to eq(123)
+    expect(first_item["unit_price"]).to eq("12.34")
   end
 
    it "returns all items with same merchant id" do

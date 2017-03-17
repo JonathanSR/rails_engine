@@ -33,7 +33,7 @@ Rails.application.routes.draw do
         get '/:id/items', to: 'merchants_items#index'
         get '/:id/invoices', to: 'merchants_invoices#index'
         get '/:id/favorite_customer', to: 'favorite_customer#show'
-        get '/revenue', to: 'merchants_revenue#index'
+        get '/:id/revenue', to: 'merchants_total_revenue#show'
         get '/most_revenue', to: 'merchants_most_revenue#index'
         get '/most_items', to: 'merchants_most_items#index'
       end
