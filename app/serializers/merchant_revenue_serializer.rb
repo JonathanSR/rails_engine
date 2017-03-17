@@ -1,7 +1,8 @@
 class MerchantRevenueSerializer < ActiveModel::Serializer
   attributes :revenue
 
-  def revenue 
+  def revenue
+    byebug
     to_dollars(object.revenue(@instance_options[:date]))
   end
 

@@ -79,25 +79,25 @@ it "returns a single item by name" do
   end
 
   it "returns a single item by created at" do
-    item = create(:item)
+    item = create(:item, id: 110, created_at: "2014-11-07 12:12:12")
 
     get "/api/v1/items/find?created_at=2014-11-07 12:12:12"
 
     returned_item = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_item["created_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_item["id"]).to eq(110)
   end
 
   it "returns a single item by updated at" do
-    item = create(:item)
+    item = create(:item, id: 130, updated_at: "2014-11-07 12:12:12")
 
     get "/api/v1/items/find?updated_at=2014-11-07 12:12:12"
 
     returned_item = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_item["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
+    expect(returned_item["id"]).to eq(130)
   end
 
   it "returns all items with same id" do
@@ -150,7 +150,6 @@ it "returns a single item by name" do
     returned_items = JSON.parse(response.body)
     first_item = returned_items.first
 
-#byebug
     expect(response).to be_success
     expect(returned_items.count).to eq(3)
     expect(first_item["unit_price"]).to eq("12.34")
@@ -165,7 +164,6 @@ it "returns a single item by name" do
 
     returned_items = JSON.parse(response.body)
     first_item = returned_items.first
-
 
     expect(response).to be_success
     expect(returned_items.count).to eq(3)
@@ -182,20 +180,20 @@ it "returns a single item by name" do
 
     expect(response).to be_success
     expect(returned_items.count).to eq(3)
-    expect(first_item["created_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
   it "returns all items with same updated_at" do
-    create_list(:item, 3)
+    item1 = create(:item, updated_at: "2014-11-07 12:12:12.000Z")
+    item2 = create(:item, updated_at: "2014-11-07 12:12:12.000Z")
+    item3 = create(:item, updated_at: "2014-11-07 12:12:12.000Z")
 
-    get "/api/v1/items/find_all?updated_at=2014-11-07T12:12:12.000Z"
+    get "/api/v1/items/find_all?updated_at=2014-11-07T12:12:12"
 
     returned_items = JSON.parse(response.body)
     first_item = returned_items.first
 
     expect(response).to be_success
     expect(returned_items.count).to eq(3)
-    expect(first_item["updated_at"]).to eq("2014-11-07T12:12:12.000Z")
   end
 
   it "returns a random invoice record" do
@@ -206,6 +204,46 @@ it "returns a single item by name" do
 
     expect(response).to be_success
     expect(items.class).to eq(Hash)
+  end
 
+  it "returns top items ranked by total revenue" do
+    item1 = create(:item)
+    item2 = create(:item)
+    item3 = create(:item)
+    invoice1 = create(:invoice)
+    invoice2 = create(:invoice)
+    invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, item_id: item1.id, quantity: 2, unit_price: 5000)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, item_id: item2.id, quantity: 1, unit_price: 5000)
+    transaction1 = create(:transaction, result: 'success', invoice_id: invoice1.id)
+    transaction2 = create(:transaction, result: 'success', invoice_id: invoice2.id)
+
+    get "/api/v1/items/most_revenue?quantity=2"
+
+    returned_result = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(returned_result.count).to eq(2)
+  end
+
+  it "returns top items ranked by total items sold" do
+    item1 = create(:item)
+    item2 = create(:item)
+    item3 = create(:item)
+    invoice1 = create(:invoice)
+    invoice2 = create(:invoice)
+    invoice3 = create(:invoice)
+    invoice_item1 = create(:invoice_item, invoice_id: invoice1.id, item_id: item1.id, quantity: 10, unit_price: 1000)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice2.id, item_id: item2.id, quantity: 5, unit_price: 1000)
+    invoice_item2 = create(:invoice_item, invoice_id: invoice3.id, item_id: item3.id, quantity: 1, unit_price: 1000)
+    transaction1 = create(:transaction, result: 'success', invoice_id: invoice1.id)
+    transaction2 = create(:transaction, result: 'success', invoice_id: invoice2.id)
+    transaction3 = create(:transaction, result: 'success', invoice_id: invoice3.id)
+
+    get "/api/v1/items/most_items?quantity=2"
+
+    returned_result = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(returned_result.count).to eq(2)
   end
 end

@@ -58,24 +58,24 @@ describe "Merchants API" do
   end
 
   it "returns a single merchant by created_at" do
-    merchant = create(:merchant)
+    merchant = create(:merchant, id: 346, created_at: "2014-11-07 12:12:12")
 
-    get "/api/v1/merchants/find?created_at=#{merchant.created_at}"
+    get "/api/v1/merchants/find?created_at=2014-11-07 12:12:12"
     returned_merchant =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_merchant["created_at"]).to eq(merchant.created_at)
+    expect(returned_merchant["id"]).to eq(346)
   end
 
   it "returns a single merchant by updated_at" do
-    merchant = create(:merchant)
+    merchant = create(:merchant, id: 340, updated_at: "2014-11-07 12:12:12")
 
-    get "/api/v1/merchants/find?updated_at=#{merchant.updated_at}"
+    get "/api/v1/merchants/find?updated_at=2014-11-07 12:12:12"
 
     returned_merchant =JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_merchant["updated_at"]).to eq(merchant.updated_at)
+    expect(returned_merchant["id"]).to eq(340)
   end
 
   it "returns all merchants with an id" do
