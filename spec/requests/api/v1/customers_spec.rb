@@ -232,5 +232,4 @@ describe "Customers API" do
     expect(returned_transactions.first["invoice_id"]).to eq(invoice.id)
     expect(returned_transactions.count).to eq(3)
   end
-
 end
