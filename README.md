@@ -19,7 +19,7 @@ In your terminal:
 
 3. Run db:migrate
 
-4. Run db:seed
+4. Run rake seed
 
 5. Run db:test:prepare
 

@@ -13,8 +13,8 @@ class Api::V1::Items::SearchItemsController < ApplicationController
   def item_params
     if params[:unit_price]
       params[:unit_price] = params[:unit_price].delete(".")
-      params[:unit_price] = 
     end
     params.permit(:id, :name, :description, :unit_price, :merchant_id, :created_at, :updated_at)
   end
+
 end
